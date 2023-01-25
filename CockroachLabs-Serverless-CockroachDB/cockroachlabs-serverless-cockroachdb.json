@@ -1,0 +1,137 @@
+{
+	"typeName": "CockroachLabs::Serverless::CockroachDB",
+	"description": "The CockroachLabs::Serverless::CockroachDB resource creates a serverless instance of CockroachDB.",
+	"sourceUrl": "https://github.com/rsacramento/cloudformation-cockroachlabs-resources",
+	"documentationUrl": "https://github.com/rsacramento/cloudformation-cockroachlabs-resources",
+	"tagging": {
+		"taggable": true,
+		"tagOnCreate": true,
+		"tagUpdatable": true,
+		"cloudFormationSystemTags": false,
+		"tagProperty": "#/property/Tags"
+	},
+	"typeConfiguration": {
+		"properties": {
+			"CockroachLabsCloudCredentials": {
+				"$ref": "#/definitions/CockroachLabsCloudCredentials"
+			}
+		},
+		"required": ["CockroachLabsCloudCredentials"],
+		"additionalProperties": false
+	},
+	"definitions": {
+		"Id": {
+			"type": "string",
+			"pattern": "^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$"
+		},
+		"CockroachLabsCloudCredentials": {
+			"description": "Credentials for the CockroachLabs Cloud API",
+			"type": "object",
+			"properties": {
+				"ApiKey": {
+					"description": "CockroachLabs Cloud API Key",
+					"type": "string"
+				}
+			},
+			"required": ["ApiKey"],
+			"additionalProperties": false
+		},
+		"Region": {
+			"description": "Region to run Cockroach cluster",
+			"type": "string",
+			"enum": ["us-east-1", "us-west-2", "eu-central-1", "eu-west-1", "ap-southeast-1", "ap-south-1"]
+		},
+		"Tag": {
+			"description": "A key-value pair to associate with a resource.",
+			"type": "object",
+			"properties": {
+				"Key": {
+					"type": "string",
+					"description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+					"minLength": 1,
+					"maxLength": 128
+				},
+				"Value": {
+					"type": "string",
+					"description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
+					"minLength": 0,
+					"maxLength": 256
+				}
+			},
+			"required": ["Key"],
+			"additionalProperties": false
+		}
+	},
+	"properties": {
+		"Id": {
+			"$ref": "#/definitions/Id"
+		},
+		"State": {
+			"description": "The state of the cluster.",
+			"type": "string"
+		},
+		"Name": {
+			"description": "Name must be 6-20 characters in length and can include numbers, lowercase letters, and dashes (but no leading or trailing dashes).",
+			"type": "string",
+			"pattern": "^[a-z0-9][a-z0-9-]{4,18}[a-z0-9]$"
+		},
+		"Provider": {
+			"description": "Cloud provider to run the cluster (Amazon Web Services or Google Cloud Platform).",
+			"type": "string",
+			"enum": ["AWS"],
+			"default": "AWS"
+		},
+		"Regions": {
+			"description": "Region to run Cockroach cluster",
+			"type": "array",
+			"arrayType": "Standard",
+			"insertionOrder": false,
+			"minItems": 1,
+			"maxItems": 1,
+			"items": {
+				"$ref": "#/definitions/Region"
+			}
+		},
+		"SpendLimit": {
+			"description": "Spend limit in US cents. A credit card must be registered for the CockroachLabs account for any limit above zero.",
+			"type": "integer",
+			"minimum": 0,
+			"maximum": 0,
+			"default": 0
+		},
+		"Tags": {
+			"description": "A list of tags to apply to the resource.",
+			"type": "array",
+			"arrayType": "Standard",
+			"uniqueItems": true,
+			"insertionOrder": false,
+			"items": {}
+		}
+	},
+	"required": ["Name", "Provider", "Regions", "SpendLimit"],
+	"additionalProperties": false,
+	"readOnlyProperties": ["/properties/Id", "/properties/State"],
+	"createOnlyProperties": ["/properties/Name", "/properties/Provider", "/properties/Regions"],
+	"nonPublicProperties": ["/properties/State"],
+	"propertyTransform": {
+		"/properties/Regions": "Regions{'Regions': [`name`]}"
+	},
+	"primaryIdentifier": ["/properties/Id"],
+	"handlers": {
+		"create": {
+			"permissions": []
+		},
+		"read": {
+			"permissions": []
+		},
+		"update": {
+			"permissions": []
+		},
+		"delete": {
+			"permissions": []
+		},
+		"list": {
+			"permissions": []
+		}
+	}
+}
