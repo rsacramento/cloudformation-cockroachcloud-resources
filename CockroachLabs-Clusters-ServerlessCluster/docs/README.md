@@ -1,6 +1,6 @@
-# CockroachLabs::ServerlessClusters::Cluster
+# CockroachLabs::Clusters::ServerlessCluster
 
-The CockroachLabs::ServerlessClusters::Cluster resource creates a cluster to run a serverless instance of CockroachDB.
+The CockroachLabs::Clusters::ServerlessCluster resource creates a serverless cluster to run an instance of CockroachDB.
 
 ## Syntax
 
@@ -10,7 +10,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 
 <pre>
 {
-    "Type" : "CockroachLabs::ServerlessClusters::Cluster",
+    "Type" : "CockroachLabs::Clusters::ServerlessCluster",
     "Properties" : {
         "<a href="#name" title="Name">Name</a>" : <i>String</i>,
         "<a href="#provider" title="Provider">Provider</a>" : <i>String</i>,
@@ -23,7 +23,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 ### YAML
 
 <pre>
-Type: CockroachLabs::ServerlessClusters::Cluster
+Type: CockroachLabs::Clusters::ServerlessCluster
 Properties:
     <a href="#name" title="Name">Name</a>: <i>String</i>
     <a href="#provider" title="Provider">Provider</a>: <i>String</i>
@@ -82,7 +82,7 @@ _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormati
 
 ### Ref
 
-When you pass the logical ID of this resource to the intrinsic `Ref` function, Ref returns the Id.
+When you pass the logical ID of this resource to the intrinsic `Ref` function, Ref returns the ClusterId.
 
 ### Fn::GetAtt
 
@@ -90,9 +90,9 @@ The `Fn::GetAtt` intrinsic function returns a value for a specified attribute of
 
 For more information about using the `Fn::GetAtt` intrinsic function, see [Fn::GetAtt](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getatt.html).
 
-#### Id
+#### ClusterId
 
-Returns the <code>Id</code> value.
+Returns the <code>ClusterId</code> value.
 
 #### State
 

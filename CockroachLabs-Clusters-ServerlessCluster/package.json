@@ -1,9 +1,9 @@
 {
-	"name": "cockroachlabs-serverlessclusters-cluster",
+	"name": "cockroachlabs-clusters-serverlesscluster",
 	"version": "0.1.0",
-	"description": "AWS custom resource provider named CockroachLabs::ServerlessClusters::Cluster.",
+	"description": "AWS custom resource provider named CockroachLabs::Clusters::ServerlessCluster.",
 	"private": true,
-	"main": "dist/CockroachLabs-ServerlessClusters-Cluster/src/handlers.js",
+	"main": "dist/CockroachLabs-Clusters-ServerlessCluster/src/handlers.js",
 	"files": [
 		"dist"
 	],

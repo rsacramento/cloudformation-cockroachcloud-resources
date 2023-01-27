@@ -21,7 +21,7 @@ Resources:
                   Ref: AWS::AccountId
               StringLike:
                 aws:SourceArn:
-                  Fn::Sub: arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:type/resource/CockroachLabs-ServerlessClusters-Cluster/*
+                  Fn::Sub: arn:${AWS::Partition}:cloudformation:${AWS::Region}:${AWS::AccountId}:type/resource/CockroachLabs-Clusters-ServerlessCluster/*
       Path: "/"
       Policies:
         - PolicyName: ResourceTypePolicy

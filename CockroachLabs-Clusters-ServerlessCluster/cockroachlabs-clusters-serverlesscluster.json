@@ -1,6 +1,6 @@
 {
-	"typeName": "CockroachLabs::ServerlessClusters::Cluster",
-	"description": "The CockroachLabs::ServerlessClusters::Cluster resource creates a cluster to run a serverless instance of CockroachDB.",
+	"typeName": "CockroachLabs::Clusters::ServerlessCluster",
+	"description": "The CockroachLabs::Clusters::ServerlessCluster resource creates a serverless cluster to run an instance of CockroachDB.",
 	"sourceUrl": "https://github.com/rsacramento/cloudformation-cockroachlabs-resources",
 	"documentationUrl": "https://github.com/rsacramento/cloudformation-cockroachlabs-resources",
 	"tagging": {
@@ -16,7 +16,7 @@
 		"additionalProperties": false
 	},
 	"definitions": {
-		"Id": {
+		"ClusterId": {
 			"type": "string",
 			"pattern": "^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$"
 		},
@@ -52,8 +52,8 @@
 		}
 	},
 	"properties": {
-		"Id": {
-			"$ref": "#/definitions/Id"
+		"ClusterId": {
+			"$ref": "#/definitions/ClusterId"
 		},
 		"State": {
 			"description": "The state of the cluster.",
@@ -91,13 +91,13 @@
 	},
 	"required": ["Name", "Provider", "Regions", "SpendLimit"],
 	"additionalProperties": false,
-	"readOnlyProperties": ["/properties/Id", "/properties/State"],
+	"readOnlyProperties": ["/properties/ClusterId", "/properties/State"],
 	"createOnlyProperties": ["/properties/Name", "/properties/Provider", "/properties/Regions"],
 	"nonPublicProperties": ["/properties/State"],
 	"propertyTransform": {
 		"/properties/Regions": "Regions{'Regions': [`name`]}"
 	},
-	"primaryIdentifier": ["/properties/Id"],
+	"primaryIdentifier": ["/properties/ClusterId"],
 	"handlers": {
 		"create": {
 			"permissions": []
