@@ -6,7 +6,7 @@ export class ResourceModel extends BaseModel {
     ['constructor']: typeof ResourceModel;
 
     @Exclude()
-    public static readonly TYPE_NAME: string = 'CockroachLabs::Serverless::CockroachDB';
+    public static readonly TYPE_NAME: string = 'CockroachLabs::ServerlessClusters::Cluster';
 
     @Exclude()
     protected readonly IDENTIFIER_KEY_ID: string = '/properties/Id';
@@ -65,15 +65,6 @@ export class ResourceModel extends BaseModel {
         }
     )
     spendLimit?: Optional<integer>;
-    @Expose({ name: 'Tags' })
-    @Transform(
-        (value: any, obj: any) =>
-            transformValue(Object, 'tags', value, obj, [Set, Map]),
-        {
-            toClassOnly: true,
-        }
-    )
-    tags?: Optional<Set<Map<string, object>>>;
 
     @Exclude()
     public getPrimaryIdentifier(): Dict {

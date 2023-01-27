@@ -32,7 +32,7 @@ class Resource extends AbstractCockroachLabsResource<
 > {
 	private userAgent = `AWS CloudFormation (+https://aws.amazon.com/cloudformation/) CloudFormation resource ${this.typeName}/${version}`
 	private apiEndpoint = "https://cockroachlabs.cloud/api/v1"
-	maxRetries = 1
+	maxRetries = 2
 
 	@handlerEvent(Action.Create)
 	async createHandler(
@@ -42,6 +42,7 @@ class Resource extends AbstractCockroachLabsResource<
 		logger: LoggerProxy,
 		typeConfiguration: TypeConfigurationModel
 	): Promise<ProgressEvent<ResourceModel, RetryableCallbackContext>> {
+		// logger.log(":::createHandler 1:::", request)
 		const progressEvent = await super.createHandler(session, request, callbackContext, logger, typeConfiguration)
 
 		if (

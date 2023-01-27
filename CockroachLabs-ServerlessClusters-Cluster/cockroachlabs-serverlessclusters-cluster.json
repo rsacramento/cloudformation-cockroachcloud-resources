@@ -1,14 +1,10 @@
 {
-	"typeName": "CockroachLabs::Serverless::CockroachDB",
-	"description": "The CockroachLabs::Serverless::CockroachDB resource creates a serverless instance of CockroachDB.",
+	"typeName": "CockroachLabs::ServerlessClusters::Cluster",
+	"description": "The CockroachLabs::ServerlessClusters::Cluster resource creates a cluster to run a serverless instance of CockroachDB.",
 	"sourceUrl": "https://github.com/rsacramento/cloudformation-cockroachlabs-resources",
 	"documentationUrl": "https://github.com/rsacramento/cloudformation-cockroachlabs-resources",
 	"tagging": {
-		"taggable": true,
-		"tagOnCreate": true,
-		"tagUpdatable": true,
-		"cloudFormationSystemTags": false,
-		"tagProperty": "#/property/Tags"
+		"taggable": false
 	},
 	"typeConfiguration": {
 		"properties": {
@@ -37,29 +33,22 @@
 			"additionalProperties": false
 		},
 		"Region": {
-			"description": "Region to run Cockroach cluster",
+			"description": "Make sure to choose a region compatible with the cloud provider to deploy the cluster. For AWS, enter one of us-east-1, us-west-2, eu-central-1, eu-west-1, ap-southeast-1, ap-south-1. For GCP, enter one of us-east1, us-west2, us-central1, europe-west1, asia-southeast1, southamerica-east1.",
 			"type": "string",
-			"enum": ["us-east-1", "us-west-2", "eu-central-1", "eu-west-1", "ap-southeast-1", "ap-south-1"]
-		},
-		"Tag": {
-			"description": "A key-value pair to associate with a resource.",
-			"type": "object",
-			"properties": {
-				"Key": {
-					"type": "string",
-					"description": "The key name of the tag. You can specify a value that is 1 to 128 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
-					"minLength": 1,
-					"maxLength": 128
-				},
-				"Value": {
-					"type": "string",
-					"description": "The value for the tag. You can specify a value that is 0 to 256 Unicode characters in length and cannot be prefixed with aws:. You can use any of the following characters: the set of Unicode letters, digits, whitespace, _, ., /, =, +, and -. ",
-					"minLength": 0,
-					"maxLength": 256
-				}
-			},
-			"required": ["Key"],
-			"additionalProperties": false
+			"enum": [
+				"us-east-1",
+				"us-west-2",
+				"eu-central-1",
+				"eu-west-1",
+				"ap-southeast-1",
+				"ap-south-1",
+				"us-east1",
+				"us-west2",
+				"us-central1",
+				"europe-west1",
+				"asia-southeast1",
+				"southamerica-east1"
+			]
 		}
 	},
 	"properties": {
@@ -78,11 +67,11 @@
 		"Provider": {
 			"description": "Cloud provider to run the cluster (Amazon Web Services or Google Cloud Platform).",
 			"type": "string",
-			"enum": ["AWS"],
+			"enum": ["AWS", "GCP"],
 			"default": "AWS"
 		},
 		"Regions": {
-			"description": "Region to run Cockroach cluster",
+			"description": "Region to run the CockroachDB cluster on Amazon Web Services (AWS) or Google Cloud Platform (GCP).",
 			"type": "array",
 			"arrayType": "Standard",
 			"insertionOrder": false,
@@ -93,19 +82,11 @@
 			}
 		},
 		"SpendLimit": {
-			"description": "Spend limit in US cents. A credit card must be registered for the CockroachLabs account for any limit above zero.",
+			"description": "Spend limit in US cents. A credit card must be registered in the CockroachLabs account for any limit above zero.",
 			"type": "integer",
 			"minimum": 0,
-			"maximum": 0,
+			"maximum": 9999999,
 			"default": 0
-		},
-		"Tags": {
-			"description": "A list of tags to apply to the resource.",
-			"type": "array",
-			"arrayType": "Standard",
-			"uniqueItems": true,
-			"insertionOrder": false,
-			"items": {}
 		}
 	},
 	"required": ["Name", "Provider", "Regions", "SpendLimit"],

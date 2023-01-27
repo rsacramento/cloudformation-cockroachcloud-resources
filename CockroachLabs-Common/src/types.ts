@@ -5,19 +5,16 @@ export type ApiError = {
 }
 
 export type CockroachLabsError = {
-	code?: string
-	status?: number
-	response?: {
-		status?: number
-		statusText?: string
-		data?: ApiError
-	}
+	status: number
+	statusText?: string
+	body?: ApiError
+	response?: any
 	error?: Error
 }
 
 export const CockroachLabsNotFoundError: CockroachLabsError = {
 	status: 404,
-	error: new Error('CockroachLabs\' Cloud API returned the requested resource but it is marked as "DELETED"'),
+	error: new Error('CockroachLabs\' Cluster API returned the requested resource but it is marked as "DELETED"'),
 }
 
 export type ResponseWithHttpInfo = {

@@ -52,7 +52,6 @@ export abstract class AbstractBaseResource<
 	 * @param model Current model coming from CloudFormation. This contains the input given by the user as well as any
 	 * @param typeConfiguration The type configuration for the resource. This can be null
 	 * output already set by previous handler which returned an IN_PROGRESS event.
-	 * @param typeConfiguration
 	 */
 	abstract create(model: ResourceModelType, typeConfiguration?: TypeConfigurationType): Promise<CreateResponseData>
 

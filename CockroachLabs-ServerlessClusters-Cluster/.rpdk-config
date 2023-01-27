@@ -1,10 +1,10 @@
 {
   "artifact_type": "RESOURCE",
-  "typeName": "CockroachLabs::Serverless::CockroachDB",
+  "typeName": "CockroachLabs::ServerlessClusters::Cluster",
   "language": "typescript",
   "runtime": "nodejs14.x",
-  "entrypoint": "dist/CockroachLabs-Serverless-CockroachDB/src/handlers.entrypoint",
-  "testEntrypoint": "dist/CockroachLabs-Serverless-CockroachDB/src/handlers.testEntrypoint",
+  "entrypoint": "dist/CockroachLabs-ServerlessClusters-Cluster/src/handlers.entrypoint",
+  "testEntrypoint": "dist/CockroachLabs-ServerlessClusters-Cluster/src/handlers.testEntrypoint",
   "settings": {
     "version": false,
     "subparser_name": null,
