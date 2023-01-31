@@ -91,6 +91,14 @@ export abstract class AbstractBaseResource<
 	abstract setModelFrom(model: ResourceModelType, from?: GetResponseData | CreateResponseData): ResourceModelType
 
 	/**
+	 * This method is invoked when the current CloudFormation model needs to check if the resource is ready to be used.
+	 *
+	 * @param model Current model coming from CloudFormation. This contains the input given by the user as well as any
+	 * output already set by previous handler which returned an IN_PROGRESS event.
+	 */
+	protected abstract isReady(model: ResourceModelType): Boolean
+
+	/**
 	 * This method is invoked when an exception is thrown while calling get, list, create, update or delete methods.
 	 * This should process the exception in turn thrown one of the CloudFormation framework exception, e.g
 	 * `new exceptions.NotFound()`
@@ -128,10 +136,15 @@ export abstract class AbstractBaseResource<
 
 			try {
 				let data = await this.create(model, typeConfiguration)
+
 				model = this.setModelFrom(model, data)
-				return ProgressEvent.progress<ProgressEvent<ResourceModelType, RetryableCallbackContext>>(model, {
-					retry: 1,
-				})
+				if (this.isReady(model)) {
+					return ProgressEvent.success<ProgressEvent<ResourceModelType, RetryableCallbackContext>>(model)
+				} else {
+					return ProgressEvent.progress<ProgressEvent<ResourceModelType, RetryableCallbackContext>>(model, {
+						retry: 1,
+					})
+				}
 			} catch (e) {
 				this.processRequestException(e, request)
 			}
