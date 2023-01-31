@@ -15,7 +15,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
         "<a href="#name" title="Name">Name</a>" : <i>String</i>,
         "<a href="#provider" title="Provider">Provider</a>" : <i>String</i>,
         "<a href="#regions" title="Regions">Regions</a>" : <i>[ String, ... ]</i>,
-        "<a href="#spendlimit" title="SpendLimit">SpendLimit</a>" : <i>Integer</i>
+        "<a href="#spendlimit" title="SpendLimit">SpendLimit</a>" : <i>Integer</i>,
     }
 }
 </pre>
@@ -54,7 +54,7 @@ _Required_: Yes
 
 _Type_: String
 
-_Allowed Values_: <code>AWS</code> | <code>GCP</code>
+_Allowed Values_: <code>AWS</code>
 
 _Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
 
@@ -82,7 +82,7 @@ _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormati
 
 ### Ref
 
-When you pass the logical ID of this resource to the intrinsic `Ref` function, Ref returns the ClusterId.
+When you pass the logical ID of this resource to the intrinsic `Ref` function, Ref returns the Id.
 
 ### Fn::GetAtt
 
@@ -90,11 +90,15 @@ The `Fn::GetAtt` intrinsic function returns a value for a specified attribute of
 
 For more information about using the `Fn::GetAtt` intrinsic function, see [Fn::GetAtt](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-function-reference-getatt.html).
 
-#### ClusterId
+#### Id
 
-Returns the <code>ClusterId</code> value.
+Returns the <code>Id</code> value.
 
 #### State
 
 The state of the cluster.
+
+#### Certificate
+
+Save the CA certificate provided by the cluster to the default PostgreSQL certificate directory on your machine. (Possibly $HOME/.postgresql/ on Unix-based systems; $env:appdata\postgresql\ on Windows)
 

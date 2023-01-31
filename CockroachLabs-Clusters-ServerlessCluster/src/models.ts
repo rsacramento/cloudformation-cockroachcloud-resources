@@ -9,17 +9,17 @@ export class ResourceModel extends BaseModel {
     public static readonly TYPE_NAME: string = 'CockroachLabs::Clusters::ServerlessCluster';
 
     @Exclude()
-    protected readonly IDENTIFIER_KEY_CLUSTERID: string = '/properties/ClusterId';
+    protected readonly IDENTIFIER_KEY_ID: string = '/properties/Id';
 
-    @Expose({ name: 'ClusterId' })
+    @Expose({ name: 'Id' })
     @Transform(
         (value: any, obj: any) =>
-            transformValue(String, 'clusterId', value, obj, []),
+            transformValue(String, 'id', value, obj, []),
         {
             toClassOnly: true,
         }
     )
-    clusterId?: Optional<string>;
+    id?: Optional<string>;
     @Expose({ name: 'State' })
     @Transform(
         (value: any, obj: any) =>
@@ -65,12 +65,21 @@ export class ResourceModel extends BaseModel {
         }
     )
     spendLimit?: Optional<integer>;
+    @Expose({ name: 'Certificate' })
+    @Transform(
+        (value: any, obj: any) =>
+            transformValue(String, 'certificate', value, obj, []),
+        {
+            toClassOnly: true,
+        }
+    )
+    certificate?: Optional<string>;
 
     @Exclude()
     public getPrimaryIdentifier(): Dict {
         const identifier: Dict = {};
-        if (this.clusterId != null) {
-            identifier[this.IDENTIFIER_KEY_CLUSTERID] = this.clusterId;
+        if (this.id != null) {
+            identifier[this.IDENTIFIER_KEY_ID] = this.id;
         }
 
         // only return the identifier if it can be used, i.e. if all components are present

@@ -16,7 +16,7 @@
 		"additionalProperties": false
 	},
 	"definitions": {
-		"ClusterId": {
+		"Id": {
 			"type": "string",
 			"pattern": "^[a-z0-9]{8}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{4}-[a-z0-9]{12}$"
 		},
@@ -35,25 +35,12 @@
 		"Region": {
 			"description": "Make sure to choose a region compatible with the cloud provider to deploy the cluster. For AWS, enter one of us-east-1, us-west-2, eu-central-1, eu-west-1, ap-southeast-1, ap-south-1. For GCP, enter one of us-east1, us-west2, us-central1, europe-west1, asia-southeast1, southamerica-east1.",
 			"type": "string",
-			"enum": [
-				"us-east-1",
-				"us-west-2",
-				"eu-central-1",
-				"eu-west-1",
-				"ap-southeast-1",
-				"ap-south-1",
-				"us-east1",
-				"us-west2",
-				"us-central1",
-				"europe-west1",
-				"asia-southeast1",
-				"southamerica-east1"
-			]
+			"enum": ["us-east-1", "us-west-2", "eu-central-1", "eu-west-1", "ap-southeast-1", "ap-south-1"]
 		}
 	},
 	"properties": {
-		"ClusterId": {
-			"$ref": "#/definitions/ClusterId"
+		"Id": {
+			"$ref": "#/definitions/Id"
 		},
 		"State": {
 			"description": "The state of the cluster.",
@@ -67,7 +54,7 @@
 		"Provider": {
 			"description": "Cloud provider to run the cluster (Amazon Web Services or Google Cloud Platform).",
 			"type": "string",
-			"enum": ["AWS", "GCP"],
+			"enum": ["AWS"],
 			"default": "AWS"
 		},
 		"Regions": {
@@ -87,17 +74,21 @@
 			"minimum": 0,
 			"maximum": 9999999,
 			"default": 0
+		},
+		"Certificate": {
+			"description": "Save the CA certificate provided by the cluster to the default PostgreSQL certificate directory on your machine. (Possibly $HOME/.postgresql/ on Unix-based systems; $env:appdata\\postgresql\\ on Windows)",
+			"type": "string"
 		}
 	},
 	"required": ["Name", "Provider", "Regions", "SpendLimit"],
 	"additionalProperties": false,
-	"readOnlyProperties": ["/properties/ClusterId", "/properties/State"],
+	"readOnlyProperties": ["/properties/Id", "/properties/State", "/properties/Certificate"],
 	"createOnlyProperties": ["/properties/Name", "/properties/Provider", "/properties/Regions"],
 	"nonPublicProperties": ["/properties/State"],
 	"propertyTransform": {
 		"/properties/Regions": "Regions{'Regions': [`name`]}"
 	},
-	"primaryIdentifier": ["/properties/ClusterId"],
+	"primaryIdentifier": ["/properties/Id"],
 	"handlers": {
 		"create": {
 			"permissions": []
