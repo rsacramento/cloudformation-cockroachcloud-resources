@@ -1,6 +1,6 @@
-# CockroachLabs::Clusters::ServerlessCluster
+# CockroachLabs::ServerlessCluster::CockroachDB
 
-The CockroachLabs::Clusters::ServerlessCluster resource creates a serverless cluster to run an instance of CockroachDB.
+The CockroachLabs::ServerlessCluster::CockroachDB resource creates a serverless cluster to run an instance of CockroachDB.
 
 ## Syntax
 
@@ -10,7 +10,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 
 <pre>
 {
-    "Type" : "CockroachLabs::Clusters::ServerlessCluster",
+    "Type" : "CockroachLabs::ServerlessCluster::CockroachDB",
     "Properties" : {
         "<a href="#name" title="Name">Name</a>" : <i>String</i>,
         "<a href="#provider" title="Provider">Provider</a>" : <i>String</i>,
@@ -23,7 +23,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 ### YAML
 
 <pre>
-Type: CockroachLabs::Clusters::ServerlessCluster
+Type: CockroachLabs::ServerlessCluster::CockroachDB
 Properties:
     <a href="#name" title="Name">Name</a>: <i>String</i>
     <a href="#provider" title="Provider">Provider</a>: <i>String</i>
@@ -96,7 +96,7 @@ Returns the <code>Id</code> value.
 
 #### State
 
-The state of the cluster.
+Returns the <code>State</code> value.
 
 #### Certificate
 

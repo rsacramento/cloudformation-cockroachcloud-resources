@@ -79,7 +79,7 @@ class Resource extends AbstractCockroachLabsResource<
 						provider: "",
 						spec: {
 							serverless: {
-								regions: [] as string[],
+								regions: <string[]>[],
 								spend_limit: Number(),
 							},
 						},

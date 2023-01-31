@@ -1,6 +1,6 @@
 {
-	"typeName": "CockroachLabs::Clusters::ServerlessCluster",
-	"description": "The CockroachLabs::Clusters::ServerlessCluster resource creates a serverless cluster to run an instance of CockroachDB.",
+	"typeName": "CockroachLabs::ServerlessCluster::CockroachDB",
+	"description": "The CockroachLabs::ServerlessCluster::CockroachDB resource creates a serverless cluster to run an instance of CockroachDB.",
 	"sourceUrl": "https://github.com/rsacramento/cloudformation-cockroachlabs-resources",
 	"documentationUrl": "https://github.com/rsacramento/cloudformation-cockroachlabs-resources",
 	"tagging": {
@@ -56,7 +56,6 @@
 			"$ref": "#/definitions/Id"
 		},
 		"State": {
-			"description": "The state of the cluster.",
 			"type": "string"
 		},
 		"Name": {

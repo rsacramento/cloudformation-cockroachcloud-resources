@@ -6,7 +6,7 @@ export class ResourceModel extends BaseModel {
     ['constructor']: typeof ResourceModel;
 
     @Exclude()
-    public static readonly TYPE_NAME: string = 'CockroachLabs::Clusters::ServerlessCluster';
+    public static readonly TYPE_NAME: string = 'CockroachLabs::ServerlessCluster::CockroachDB';
 
     @Exclude()
     protected readonly IDENTIFIER_KEY_ID: string = '/properties/Id';
