@@ -35,7 +35,20 @@
 		"Region": {
 			"description": "Make sure to choose a region compatible with the cloud provider to deploy the cluster. For AWS, enter one of us-east-1, us-west-2, eu-central-1, eu-west-1, ap-southeast-1, ap-south-1. For GCP, enter one of us-east1, us-west2, us-central1, europe-west1, asia-southeast1, southamerica-east1.",
 			"type": "string",
-			"enum": ["us-east-1", "us-west-2", "eu-central-1", "eu-west-1", "ap-southeast-1", "ap-south-1"]
+			"enum": [
+				"us-east-1",
+				"us-west-2",
+				"eu-central-1",
+				"eu-west-1",
+				"ap-southeast-1",
+				"ap-south-1",
+				"us-east1",
+				"us-west2",
+				"us-central1",
+				"europe-west1",
+				"asia-southeast1",
+				"southamerica-east1"
+			]
 		}
 	},
 	"properties": {
@@ -54,7 +67,7 @@
 		"Provider": {
 			"description": "Cloud provider to run the cluster (Amazon Web Services or Google Cloud Platform).",
 			"type": "string",
-			"enum": ["AWS"],
+			"enum": ["AWS", "GCP"],
 			"default": "AWS"
 		},
 		"Regions": {

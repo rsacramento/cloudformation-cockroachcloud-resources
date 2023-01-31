@@ -19,8 +19,7 @@ import {
 import { version } from "../package.json"
 
 type ClusterPayload = {
-	id: string
-	state: string
+	[i: string]: any
 	regions: [{ [i: string]: any }]
 }
 
