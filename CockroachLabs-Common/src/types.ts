@@ -7,7 +7,7 @@ export type ApiError = {
 export type CockroachLabsError = {
 	status: number
 	statusText?: string
-	body?: ApiError
+	data?: ApiError
 	response?: any
 	error?: Error
 }
