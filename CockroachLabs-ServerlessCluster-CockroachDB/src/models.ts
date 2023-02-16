@@ -65,6 +65,9 @@ export class ResourceModel extends BaseModel {
         }
     )
     spendLimit?: Optional<integer>;
+    @Expose({ name: 'Databases' })
+    @Type(() => Database)
+    databases?: Optional<Array<Database>>;
     @Expose({ name: 'Certificate' })
     @Transform(
         (value: any, obj: any) =>
@@ -92,6 +95,22 @@ export class ResourceModel extends BaseModel {
         // only return the identifiers if any can be used
         return identifiers.length === 0 ? null : identifiers;
     }
+}
+
+export class Database extends BaseModel {
+    ['constructor']: typeof Database;
+
+
+    @Expose({ name: 'Name' })
+    @Transform(
+        (value: any, obj: any) =>
+            transformValue(String, 'name', value, obj, []),
+        {
+            toClassOnly: true,
+        }
+    )
+    name?: Optional<string>;
+
 }
 
 export class TypeConfigurationModel extends BaseModel {

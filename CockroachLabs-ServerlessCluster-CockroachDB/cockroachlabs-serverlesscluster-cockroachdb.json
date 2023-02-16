@@ -35,20 +35,20 @@
 		"Region": {
 			"description": "Make sure to choose a region compatible with the cloud provider to deploy the cluster. For AWS, enter one of us-east-1, us-west-2, eu-central-1, eu-west-1, ap-southeast-1, ap-south-1. For GCP, enter one of us-east1, us-west2, us-central1, europe-west1, asia-southeast1, southamerica-east1.",
 			"type": "string",
-			"enum": [
-				"us-east-1",
-				"us-west-2",
-				"eu-central-1",
-				"eu-west-1",
-				"ap-southeast-1",
-				"ap-south-1",
-				"us-east1",
-				"us-west2",
-				"us-central1",
-				"europe-west1",
-				"asia-southeast1",
-				"southamerica-east1"
-			]
+			"enum": ["us-east-1", "us-west-2", "eu-central-1", "eu-west-1", "ap-southeast-1", "ap-south-1"]
+		},
+		"Database": {
+			"description": "Enter at least one database name to be created in the serverless cluster.",
+			"type": "object",
+			"properties": {
+				"Name": {
+					"description": "Database name must start with a letter, number, or underscore; must contain only letters, numbers, dashes, periods or underscores; and must be between 1 and 63 characters.",
+					"type": "string",
+					"pattern": "^[a-zA-Z0-9_][a-zA-Z0-9-_.]{0,62}$"
+				}
+			},
+			"required": ["Name"],
+			"additionalProperties": false
 		}
 	},
 	"properties": {
@@ -66,7 +66,7 @@
 		"Provider": {
 			"description": "Cloud provider to run the cluster (Amazon Web Services or Google Cloud Platform).",
 			"type": "string",
-			"enum": ["AWS", "GCP"],
+			"enum": ["AWS"],
 			"default": "AWS"
 		},
 		"Regions": {
@@ -87,19 +87,27 @@
 			"maximum": 9999999,
 			"default": 0
 		},
+		"Databases": {
+			"description": "Enter at least one database name to be created in the serverless cluster.",
+			"type": "array",
+			"arrayType": "AttributeList",
+			"insertionOrder": false,
+			"minItems": 2,
+			"maxItems": 2,
+			"items": {
+				"$ref": "#/definitions/Database"
+			}
+		},
 		"Certificate": {
 			"description": "Save the CA certificate provided by the cluster to the default PostgreSQL certificate directory on your machine. (Possibly $HOME/.postgresql/ on Unix-based systems; $env:appdata\\postgresql\\ on Windows)",
 			"type": "string"
 		}
 	},
-	"required": ["Name", "Provider", "Regions", "SpendLimit"],
+	"required": ["Name", "Provider", "Regions", "SpendLimit", "Databases"],
 	"additionalProperties": false,
 	"readOnlyProperties": ["/properties/Id", "/properties/State", "/properties/Certificate"],
-	"createOnlyProperties": ["/properties/Name", "/properties/Provider", "/properties/Regions"],
+	"createOnlyProperties": ["/properties/Name", "/properties/Provider", "/properties/Regions", "/properties/Databases"],
 	"nonPublicProperties": ["/properties/State"],
-	"propertyTransform": {
-		"/properties/Regions": "Regions{'Regions': [`name`]}"
-	},
 	"primaryIdentifier": ["/properties/Id"],
 	"handlers": {
 		"create": {

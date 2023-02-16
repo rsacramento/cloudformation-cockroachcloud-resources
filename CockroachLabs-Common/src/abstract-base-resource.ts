@@ -25,7 +25,7 @@ export abstract class AbstractBaseResource<
 	ErrorType,
 	TypeConfigurationType
 > extends BaseResource<ResourceModelType> {
-	maxRetries = 2
+	maxRetries = 3
 
 	/**
 	 * This method is invoked to get a resource from a vendor API, corresponding to the given the CloudFormation model input.
@@ -78,7 +78,7 @@ export abstract class AbstractBaseResource<
 	 *
 	 * @param partial The data to initially set.
 	 */
-	abstract newModel(partial?: any): ResourceModelType
+	protected abstract newModel(partial?: any): ResourceModelType
 
 	/**
 	 * This method is invoked when the current CloudFormation model needs to be set, from the responses returned by the
@@ -87,8 +87,13 @@ export abstract class AbstractBaseResource<
 	 * @param model Current model coming from CloudFormation. This contains the input given by the user as well as any
 	 * output already set by previous handler which returned an IN_PROGRESS event.
 	 * @param from The response returned coming from the get and create methods.
+	 * @param typeConfiguration The resource configuration data
 	 */
-	abstract setModelFrom(model: ResourceModelType, from?: GetResponseData | CreateResponseData): ResourceModelType
+	protected abstract setModelFrom(
+		model: ResourceModelType,
+		from?: GetResponseData | CreateResponseData,
+		typeConfiguration?: TypeConfigurationType
+	): Promise<ResourceModelType>
 
 	/**
 	 * This method is invoked when the current CloudFormation model needs to check if the resource is ready to be used.
@@ -135,9 +140,9 @@ export abstract class AbstractBaseResource<
 			}
 
 			try {
-				let data = await this.create(model, typeConfiguration)
-
-				model = this.setModelFrom(model, data)
+				const data = await this.create(model, typeConfiguration)
+				model = await this.setModelFrom(model, data, typeConfiguration)
+				// logger.log(":::CREATE_HANDLER model:::", model)
 				if (this.isReady(model)) {
 					return ProgressEvent.success<ProgressEvent<ResourceModelType, RetryableCallbackContext>>(model)
 				} else {
@@ -152,7 +157,7 @@ export abstract class AbstractBaseResource<
 
 		try {
 			const data = await this.get(model, typeConfiguration)
-			model = this.setModelFrom(model, data)
+			model = await this.setModelFrom(model, data, typeConfiguration)
 			return ProgressEvent.success<ProgressEvent<ResourceModelType, RetryableCallbackContext>>(model)
 		} catch (e) {
 			try {
@@ -200,7 +205,7 @@ export abstract class AbstractBaseResource<
 		try {
 			await this.update(model, typeConfiguration)
 			const data = await this.get(model, typeConfiguration)
-			model = this.setModelFrom(model, data)
+			model = await this.setModelFrom(model, data, typeConfiguration)
 		} catch (e) {
 			this.processRequestException(e, request)
 		}
@@ -289,8 +294,8 @@ export abstract class AbstractBaseResource<
 		let model = this.newModel(request.desiredResourceState)
 
 		try {
-			const location = await this.get(model, typeConfiguration)
-			model = this.setModelFrom(model, location)
+			const data = await this.get(model, typeConfiguration)
+			model = await this.setModelFrom(model, data, typeConfiguration)
 		} catch (e) {
 			this.processRequestException(e, request)
 		}
