@@ -68,6 +68,9 @@ export class ResourceModel extends BaseModel {
     @Expose({ name: 'Databases' })
     @Type(() => Database)
     databases?: Optional<Array<Database>>;
+    @Expose({ name: 'Users' })
+    @Type(() => User)
+    users?: Optional<Array<User>>;
     @Expose({ name: 'Certificate' })
     @Transform(
         (value: any, obj: any) =>
@@ -110,6 +113,31 @@ export class Database extends BaseModel {
         }
     )
     name?: Optional<string>;
+
+}
+
+export class User extends BaseModel {
+    ['constructor']: typeof User;
+
+
+    @Expose({ name: 'Name' })
+    @Transform(
+        (value: any, obj: any) =>
+            transformValue(String, 'name', value, obj, []),
+        {
+            toClassOnly: true,
+        }
+    )
+    name?: Optional<string>;
+    @Expose({ name: 'Password' })
+    @Transform(
+        (value: any, obj: any) =>
+            transformValue(String, 'password', value, obj, []),
+        {
+            toClassOnly: true,
+        }
+    )
+    password?: Optional<string>;
 
 }
 

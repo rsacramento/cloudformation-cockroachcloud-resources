@@ -142,7 +142,7 @@ export abstract class AbstractBaseResource<
 			try {
 				const data = await this.create(model, typeConfiguration)
 				model = await this.setModelFrom(model, data, typeConfiguration)
-				// logger.log(":::CREATE_HANDLER model:::", model)
+
 				if (this.isReady(model)) {
 					return ProgressEvent.success<ProgressEvent<ResourceModelType, RetryableCallbackContext>>(model)
 				} else {

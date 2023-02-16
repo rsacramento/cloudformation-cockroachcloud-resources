@@ -1,10 +1,10 @@
-import { Database, ResourceModel, TypeConfigurationModel } from "./models"
+import { Database, User, ResourceModel, TypeConfigurationModel } from "./models"
 import { AbstractCockroachLabsResource } from "../../CockroachLabs-Common/src/abstract-cockroachlabs-resource"
 import { RetryableCallbackContext } from "../../CockroachLabs-Common/src/abstract-base-resource"
 import axios from "axios"
 import axiosRetry from "axios-retry"
 import { CaseTransformer, Transformer } from "../../CockroachLabs-Common/src/util"
-import { CockroachLabsNotFoundError, CockroachLabsError } from "../../CockroachLabs-Common/src/types"
+import { ClusterPayload, CockroachLabsNotFoundError, CockroachLabsError } from "../../CockroachLabs-Common/src/types"
 import {
 	Action,
 	exceptions,
@@ -18,11 +18,6 @@ import {
 } from "@amazon-web-services-cloudformation/cloudformation-cli-typescript-lib"
 
 import { version } from "../package.json"
-
-type ClusterPayload = {
-	[i: string]: any
-	regions: [{ [i: string]: any }]
-}
 
 class Resource extends AbstractCockroachLabsResource<
 	ResourceModel,
@@ -68,7 +63,6 @@ class Resource extends AbstractCockroachLabsResource<
 	}
 
 	async create(model: ResourceModel, typeConfiguration: TypeConfigurationModel): Promise<ClusterPayload> {
-		this.setupAxios()
 		const { data } = await axios.post<ClusterPayload>(
 			`${this.apiEndpoint}/api/v1/clusters`,
 			{
@@ -99,7 +93,6 @@ class Resource extends AbstractCockroachLabsResource<
 	}
 
 	async delete(model: ResourceModel, typeConfiguration: TypeConfigurationModel | undefined): Promise<void> {
-		this.setupAxios()
 		await axios.delete(`${this.apiEndpoint}/api/v1/clusters/${model.id}`, {
 			headers: {
 				"User-Agent": this.userAgent,
@@ -113,7 +106,6 @@ class Resource extends AbstractCockroachLabsResource<
 			throw CockroachLabsNotFoundError
 		}
 
-		this.setupAxios()
 		const { data } = await axios.get<ClusterPayload>(`${this.apiEndpoint}/api/v1/clusters/${model.id}`, {
 			headers: {
 				Authorization: `Bearer ${typeConfiguration.cockroachLabsCloudCredentials.apiKey}`,
@@ -129,7 +121,6 @@ class Resource extends AbstractCockroachLabsResource<
 	}
 
 	async list(model: ResourceModel, typeConfiguration: TypeConfigurationModel | undefined): Promise<ResourceModel[]> {
-		this.setupAxios()
 		const { data } = await axios.get<{ clusters: ClusterPayload[] }>(`${this.apiEndpoint}/api/v1/clusters`, {
 			headers: {
 				Authorization: `Bearer ${typeConfiguration.cockroachLabsCloudCredentials.apiKey}`,
@@ -148,7 +139,6 @@ class Resource extends AbstractCockroachLabsResource<
 	}
 
 	async update(model: ResourceModel, typeConfiguration: TypeConfigurationModel | undefined): Promise<void> {
-		this.setupAxios()
 		await axios.patch(
 			`${this.apiEndpoint}/api/v1/clusters/${model.id}`,
 			{
@@ -180,32 +170,32 @@ class Resource extends AbstractCockroachLabsResource<
 			return await model
 		}
 
+		axiosRetry(axios, {
+			retries: this.maxRetries,
+			retryDelay: axiosRetry.exponentialDelay,
+			retryCondition: _error => true,
+		})
+
 		let databases: Database[]
 		if (model.id === undefined && model.state !== "CREATED") {
 			databases = await this.createDatabases(<ResourceModel>{ ...model, id: from.id }, typeConfiguration)
+			await this.createUsers(<ResourceModel>{ ...model, id: from.id }, typeConfiguration)
 		} else {
 			databases = await this.listDatabases(model, typeConfiguration)
 		}
 
+		delete model.users
 		return await new ResourceModel({
 			...model,
 			...Transformer.for(from).transformKeys(CaseTransformer.SNAKE_TO_CAMEL).forModelIngestion().transform(),
 			regions: from.regions.map(r => r.name),
-			certificate: await this.getCertificate(from.id),
 			databases,
+			certificate: await this.getCertificate(from.id),
 		})
 	}
 
 	protected isReady(model: ResourceModel): Boolean {
 		return model.state == "CREATED"
-	}
-
-	private setupAxios(): void {
-		return axiosRetry(axios, {
-			retries: this.maxRetries,
-			retryDelay: axiosRetry.exponentialDelay,
-			retryCondition: _error => true,
-		})
 	}
 
 	private async getCertificate(id: string): Promise<string> {
@@ -230,11 +220,6 @@ class Resource extends AbstractCockroachLabsResource<
 	}
 
 	private async createDatabases(model: ResourceModel, typeConfiguration: TypeConfigurationModel): Promise<Database[]> {
-		axiosRetry(axios, {
-			retries: this.maxRetries,
-			retryDelay: axiosRetry.exponentialDelay,
-			retryCondition: _error => true,
-		})
 		await axios.delete(`${this.apiEndpoint}/api/v1/clusters/${model.id}/databases/defaultdb`, {
 			headers: {
 				"User-Agent": this.userAgent,
@@ -277,6 +262,42 @@ class Resource extends AbstractCockroachLabsResource<
 		return await Promise.all(dbPromises)
 	}
 
+	private async createUsers(model: ResourceModel, typeConfiguration: TypeConfigurationModel): Promise<User[]> {
+		const userPromises = model.users.map(async props => {
+			const { data } = await axios
+				.post<User>(
+					`${this.apiEndpoint}/api/v1/clusters/${model.id}/sql-users`,
+					{
+						...Transformer.for(props.toJSON()).transformKeys(CaseTransformer.PASCAL_TO_SNAKE).transform(),
+					},
+					{
+						headers: {
+							"User-Agent": this.userAgent,
+							"Content-Type": "application/json",
+							Authorization: `Bearer ${typeConfiguration.cockroachLabsCloudCredentials.apiKey}`,
+						},
+					}
+				)
+				.catch(e => {
+					const CockroachLabsError: CockroachLabsError = {
+						status: e.response.status,
+						statusText: e.response.statusText,
+						data: e.response.data,
+						response: e.response,
+						error: new Error(`\n${JSON.stringify(e)}`),
+					}
+					throw CockroachLabsError
+				})
+
+			const userProps: [string, string][] = Object.entries(data).filter(prop => ["name"].includes(prop[0]))
+			const user = Object.fromEntries(userProps)
+			return new User(
+				Transformer.for(user).transformKeys(CaseTransformer.SNAKE_TO_CAMEL).forModelIngestion().transform()
+			)
+		})
+
+		return await Promise.all(userPromises)
+	}
 	private async listDatabases(
 		model: ResourceModel,
 		typeConfiguration: TypeConfigurationModel | undefined

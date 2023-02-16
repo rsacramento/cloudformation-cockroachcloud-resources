@@ -17,6 +17,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
         "<a href="#regions" title="Regions">Regions</a>" : <i>[ String, ... ]</i>,
         "<a href="#spendlimit" title="SpendLimit">SpendLimit</a>" : <i>Integer</i>,
         "<a href="#databases" title="Databases">Databases</a>" : <i>[ <a href="database.md">Database</a>, ... ]</i>,
+        "<a href="#users" title="Users">Users</a>" : <i>[ <a href="user.md">User</a>, ... ]</i>,
     }
 }
 </pre>
@@ -33,6 +34,8 @@ Properties:
     <a href="#spendlimit" title="SpendLimit">SpendLimit</a>: <i>Integer</i>
     <a href="#databases" title="Databases">Databases</a>: <i>
       - <a href="database.md">Database</a></i>
+    <a href="#users" title="Users">Users</a>: <i>
+      - <a href="user.md">User</a></i>
 </pre>
 
 ## Properties
@@ -57,7 +60,7 @@ _Required_: Yes
 
 _Type_: String
 
-_Allowed Values_: <code>AWS</code>
+_Allowed Values_: <code>AWS</code> | <code>GCP</code>
 
 _Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
 
@@ -75,7 +78,7 @@ _Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/l
 
 Spend limit in US cents. A credit card must be registered in the CockroachLabs account for any limit above zero.
 
-_Required_: Yes
+_Required_: No
 
 _Type_: Integer
 
@@ -85,9 +88,19 @@ _Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormati
 
 Enter at least one database name to be created in the serverless cluster.
 
-_Required_: Yes
+_Required_: No
 
 _Type_: List of <a href="database.md">Database</a>
+
+_Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
+
+#### Users
+
+A collection of pairs of usernames and passwords to access databases in the cluster.
+
+_Required_: No
+
+_Type_: List of <a href="user.md">User</a>
 
 _Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
 

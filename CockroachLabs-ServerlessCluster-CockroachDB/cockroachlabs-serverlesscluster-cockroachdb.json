@@ -33,9 +33,22 @@
 			"additionalProperties": false
 		},
 		"Region": {
-			"description": "Make sure to choose a region compatible with the cloud provider to deploy the cluster. For AWS, enter one of us-east-1, us-west-2, eu-central-1, eu-west-1, ap-southeast-1, ap-south-1. For GCP, enter one of us-east1, us-west2, us-central1, europe-west1, asia-southeast1, southamerica-east1.",
+			"description": "Make sure to choose a region compatible with the cloud provider defined to deploy the cluster. For AWS, enter one of us-east-1, us-west-2, eu-central-1, eu-west-1, ap-southeast-1, ap-south-1. For GCP, enter one of us-east1, us-west2, us-central1, europe-west1, asia-southeast1, southamerica-east1.",
 			"type": "string",
-			"enum": ["us-east-1", "us-west-2", "eu-central-1", "eu-west-1", "ap-southeast-1", "ap-south-1"]
+			"enum": [
+				"us-east-1",
+				"us-west-2",
+				"eu-central-1",
+				"eu-west-1",
+				"ap-southeast-1",
+				"ap-south-1",
+				"us-east1",
+				"us-west2",
+				"us-central1",
+				"europe-west1",
+				"asia-southeast1",
+				"southamerica-east1"
+			]
 		},
 		"Database": {
 			"description": "Enter at least one database name to be created in the serverless cluster.",
@@ -48,6 +61,24 @@
 				}
 			},
 			"required": ["Name"],
+			"additionalProperties": false
+		},
+		"User": {
+			"description": "A username/password pair to associate with the cluster/database.",
+			"type": "object",
+			"properties": {
+				"Name": {
+					"type": "string",
+					"description": "User name must start with a letter, number, or underscore; must contain only letters, numbers, dashes, periods or underscores; and must be between 1 and 63 characters.",
+					"pattern": "^[a-zA-Z0-9_][a-zA-Z0-9-_.]{0,62}$"
+				},
+				"Password": {
+					"type": "string",
+					"description": "A password for this user. Password must be 12-501 characters long and can include numbers, letters and some symbols (#$%&@^~<>*+.!?=_-)",
+					"pattern": "^[A-Za-z0-9#$%&@^~<>*+!?=_-]{12,501}$"
+				}
+			},
+			"required": ["Username", "Password"],
 			"additionalProperties": false
 		}
 	},
@@ -66,7 +97,7 @@
 		"Provider": {
 			"description": "Cloud provider to run the cluster (Amazon Web Services or Google Cloud Platform).",
 			"type": "string",
-			"enum": ["AWS"],
+			"enum": ["AWS", "GCP"],
 			"default": "AWS"
 		},
 		"Regions": {
@@ -92,10 +123,19 @@
 			"type": "array",
 			"arrayType": "AttributeList",
 			"insertionOrder": false,
-			"minItems": 2,
-			"maxItems": 2,
+			"minItems": 1,
 			"items": {
 				"$ref": "#/definitions/Database"
+			}
+		},
+		"Users": {
+			"description": "A collection of pairs of usernames and passwords to access databases in the cluster.",
+			"type": "array",
+			"arrayType": "AttributeList",
+			"insertionOrder": false,
+			"minItems": 1,
+			"items": {
+				"$ref": "#/definitions/User"
 			}
 		},
 		"Certificate": {
@@ -103,11 +143,17 @@
 			"type": "string"
 		}
 	},
-	"required": ["Name", "Provider", "Regions", "SpendLimit", "Databases"],
+	"required": ["Name", "Provider", "Regions"],
 	"additionalProperties": false,
 	"readOnlyProperties": ["/properties/Id", "/properties/State", "/properties/Certificate"],
-	"createOnlyProperties": ["/properties/Name", "/properties/Provider", "/properties/Regions", "/properties/Databases"],
-	"nonPublicProperties": ["/properties/State"],
+	"writeOnlyProperties": ["/properties/Users"],
+	"createOnlyProperties": [
+		"/properties/Name",
+		"/properties/Provider",
+		"/properties/Regions",
+		"/properties/Databases",
+		"/properties/Users"
+	],
 	"primaryIdentifier": ["/properties/Id"],
 	"handlers": {
 		"create": {

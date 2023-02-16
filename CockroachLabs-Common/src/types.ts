@@ -1,3 +1,8 @@
+export type ClusterPayload = {
+	[i: string]: any
+	regions: [{ [i: string]: any }]
+}
+
 export type ApiError = {
 	code: number
 	message: string
