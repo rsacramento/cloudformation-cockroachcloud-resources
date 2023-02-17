@@ -34,9 +34,9 @@ You should then be able to run the example use cases above or build your own usi
 
 This project only supports serverless clusters on CockroachLabs' Cloud service at the moment - not 
 dedicated clusters. Also, while it would be preferable to have databases and SQL users as their own 
-independent resource types, SQL users are linked directly to the cluster - not the database, allowing 
-minimal access control over the database. CockroachLabs' Cluster API is still under development and
-considerably unstable; once the API becomes more stable, these resources (databases and users) may be
-split into their own resource types.
+independent resource types, it did not make sense at this point as SQL users are linked directly to
+the cluster - not the database, allowing minimal access control over the database. CockroachLabs'
+Cluster API is still under development and considerably unstable; once the API becomes more stable,
+these resources (databases and users) may be split into their own resource types.
 
 The **Full CockroachLabs CloudFormation Resources Reference** is available [here](resources).
