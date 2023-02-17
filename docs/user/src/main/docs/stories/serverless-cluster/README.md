@@ -11,7 +11,8 @@ There are a few prerequisites necessary to use the CockroachLabs::ServerlessClus
 
 ## Create a Cluster
 
-The following cloudformation will create a serverless cluster with 2 CockroachDB databases and 3 SQL users.
+The following cloudformation template will create a serverless cluster with 2 CockroachDB databases and 3 SQL users, and
+output some of the information needed to connect to its databases.
 
 ```yaml
   CockroachCluster:

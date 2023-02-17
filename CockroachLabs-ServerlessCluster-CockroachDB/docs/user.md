@@ -28,7 +28,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 
 User name must start with a letter, number, or underscore; must contain only letters, numbers, dashes, periods or underscores; and must be between 1 and 63 characters.
 
-_Required_: No
+_Required_: Yes
 
 _Type_: String
 

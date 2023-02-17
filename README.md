@@ -27,9 +27,9 @@ if you are interested in building or contributing.
      $ aws cloudformation set-type-configuration \
       --region us-east-1 \
       --type RESOURCE \
-      --type-name CockroachLabs::ServerlessCluster:CockroachDB \
+      --type-name CockroachLabs::ServerlessCluster::CockroachDB \
       --configuration-alias default \
-      --configuration '{\"CockroachLabsCloudCredentials\":{\"ApiKey\":\"YOURAPIKEY\"}}'
+      --configuration '{"CockroachLabsCloudCredentials":{"ApiKey":"YOURAPIKEY"}}'
      ```
 
 3. After you have your resource configured, [create your AWS stack][11] that includes the activated CockroachLabs resource.
@@ -44,24 +44,35 @@ CockroachLabs serverless cluster creation example using the Cloudformation Cockr
 
 ```yaml
 ---
-CockroachCluster:
- Type: CockroachLabs::ServerlessCluster::CockroachDB
- Properties:
-   Name: Demo-Cluster
-   Provider: AWS
-   Regions:
-     - us-east-1
-   SpendLimit: 0
-   Databases:
-     - Name: Demo-CockroachDB
-     - Name: Another_CRDB
-   Users:
-     - Name: admin
-       Password: supersecret
-     - Name: editor
-       Password: abcdef
-     - Name: user
-       Password: mypwd%$#@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Shows how to create a CockroachLabs Cloud Serverless Cluster
+Resources:
+  CockroachCluster:
+    Type: CockroachLabs::ServerlessCluster::CockroachDB
+    Properties:
+      Name: demo-cluster
+      Provider: AWS
+      Regions:
+        - us-east-1
+      SpendLimit: 0
+      Databases:
+        - Name: Demo-CockroachDB
+        - Name: Another_CRDB
+      Users:
+        - Name: superuser
+          Password: supersecret1
+        - Name: editor
+          Password: abcdefghijkl
+        - Name: reader
+          Password: mypwd%$#@987
+
+Outputs:
+  SQLDNS:
+    Description: SQL DNS is used to connect to the database - postgresql://<SQL-USERNAME>:<SQL-PASSWORD>@<SQL-DNS>:26257/<DB-NAME>?sslmode=verify-full
+    Value: !GetAtt CockroachCluster.SqlDns
+  Certificate:
+    Description: CA Certificate to access SQL databases
+    Value: !GetAtt CockroachCluster.Certificate
 ```
 
 ## Special thanks to:

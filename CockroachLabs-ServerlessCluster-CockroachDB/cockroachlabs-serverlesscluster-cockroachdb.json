@@ -78,7 +78,7 @@
 					"pattern": "^[A-Za-z0-9#$%&@^~<>*+!?=_-]{12,501}$"
 				}
 			},
-			"required": ["Username", "Password"],
+			"required": ["Name", "Password"],
 			"additionalProperties": false
 		}
 	},
@@ -87,6 +87,10 @@
 			"$ref": "#/definitions/Id"
 		},
 		"State": {
+			"type": "string"
+		},
+		"SqlDns": {
+			"description": "SQL DNS is used to connect to the database - postgresql://<SQL-USERNAME>:<SQL-PASSWORD>@<SQL-DNS>:26257/<DB-NAME>?sslmode=verify-full",
 			"type": "string"
 		},
 		"Name": {
@@ -145,7 +149,7 @@
 	},
 	"required": ["Name", "Provider", "Regions"],
 	"additionalProperties": false,
-	"readOnlyProperties": ["/properties/Id", "/properties/State", "/properties/Certificate"],
+	"readOnlyProperties": ["/properties/Id", "/properties/State", "/properties/Certificate", "/properties/SqlDns"],
 	"writeOnlyProperties": ["/properties/Users"],
 	"createOnlyProperties": [
 		"/properties/Name",

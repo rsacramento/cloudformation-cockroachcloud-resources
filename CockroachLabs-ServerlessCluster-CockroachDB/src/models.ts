@@ -29,6 +29,15 @@ export class ResourceModel extends BaseModel {
         }
     )
     state?: Optional<string>;
+    @Expose({ name: 'SqlDns' })
+    @Transform(
+        (value: any, obj: any) =>
+            transformValue(String, 'sqlDns', value, obj, []),
+        {
+            toClassOnly: true,
+        }
+    )
+    sqlDns?: Optional<string>;
     @Expose({ name: 'Name' })
     @Transform(
         (value: any, obj: any) =>

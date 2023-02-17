@@ -1,14 +1,15 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: 2010-09-09
 
 Description: |
   The following CloudFormation CockroachLabs Cloud resource type allows the creation and configuration of 
-  a CockroachDB serverless cluster with databases and SQL users.
+  a CockroachDB serverless cluster with databases and SQL users, and outputs some of the information needed
+  to connect to the database.
       
 Resources:
   CockroachCluster:
     Type: CockroachLabs::ServerlessCluster::CockroachDB
     Properties:
-      Name: Demo-Cluster
+      Name: demo-cluster
       Provider: AWS
       Regions:
         - us-east-1
@@ -17,15 +18,17 @@ Resources:
         - Name: Demo-CockroachDB
         - Name: Another_CRDB
       Users:
-        - Name: admin
-          Password: supersecret
+        - Name: superuser
+          Password: supersecret1
         - Name: editor
-          Password: abcdef
-        - Name: user
-          Password: mypwd%$#@
+          Password: abcdefghijkl
+        - Name: reader
+          Password: mypwd%$#@987
 
 Outputs:
-  Description: Testing output of serverless cluster
-  Value: Ref! CockroachCluster
-  Export:
-    Name: MyServerlessCluster
+  SQLDNS:
+    Description: SQL DNS is used to connect to the database - postgresql://<SQL-USERNAME>:<SQL-PASSWORD>@<SQL-DNS>:26257/<DB-NAME>?sslmode=verify-full
+    Value: !GetAtt CockroachCluster.SqlDns
+  Certificate:
+    Description: CA Certificate to access SQL databases
+    Value: !GetAtt CockroachCluster.Certificate

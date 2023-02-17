@@ -128,3 +128,7 @@ Returns the <code>State</code> value.
 
 Save the CA certificate provided by the cluster to the default PostgreSQL certificate directory on your machine. (Possibly $HOME/.postgresql/ on Unix-based systems; $env:appdata\postgresql\ on Windows)
 
+#### SqlDns
+
+SQL DNS is used to connect to the database - postgresql://<SQL-USERNAME>:<SQL-PASSWORD>@<SQL-DNS>:26257/<DB-NAME>?sslmode=verify-full
+
