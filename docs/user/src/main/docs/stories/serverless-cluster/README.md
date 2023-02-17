@@ -15,10 +15,14 @@ The following cloudformation template will create a serverless cluster with 2 Co
 output some of the information needed to connect to its databases.
 
 ```yaml
+---
+AWSTemplateFormatVersion: 2010-09-09
+Description: Shows how to create a CockroachLabs Cloud Serverless Cluster
+Resources:
   CockroachCluster:
     Type: CockroachLabs::ServerlessCluster::CockroachDB
     Properties:
-      Name: Demo-Cluster
+      Name: demo-cluster
       Provider: AWS
       Regions:
         - us-east-1
@@ -27,12 +31,20 @@ output some of the information needed to connect to its databases.
         - Name: Demo-CockroachDB
         - Name: Another_CRDB
       Users:
-        - Name: admin
-          Password: supersecret
+        - Name: superuser
+          Password: supersecret1
         - Name: editor
-          Password: abcdef
-        - Name: user
-          Password: mypwd%$#@
+          Password: abcdefghijkl
+        - Name: reader
+          Password: mypwd%$#@987
+
+Outputs:
+  SQLDNS:
+    Description: SQL DNS is used to connect to the database - postgresql://<SQL-USERNAME>:<SQL-PASSWORD>@<SQL-DNS>:26257/<DB-NAME>?sslmode=verify-full
+    Value: !GetAtt CockroachCluster.SqlDns
+  Certificate:
+    Description: CA Certificate to access SQL databases
+    Value: !GetAtt CockroachCluster.Certificate
 ```
 
 ## Deploying the resources
