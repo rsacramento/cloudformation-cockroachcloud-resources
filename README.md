@@ -25,11 +25,11 @@ if you are interested in building or contributing.
 
      ```Bash
      $ aws cloudformation set-type-configuration \
-   --region us-east-1 \
-   --type RESOURCE \
-   --type-name CockroachLabs::ServerlessCluster:CockroachDB \
-   --configuration-alias default \
-   --configuration '{"CockroachLabsCloudCredentials": {"ApiKey": "{{resolve:ssm-secure:/path/to/cockroachlabs/apikey}}"}}'
+      --region us-east-1 \
+      --type RESOURCE \
+      --type-name CockroachLabs::ServerlessCluster:CockroachDB \
+      --configuration-alias default \
+      --configuration '{\"CockroachLabsCloudCredentials\":{\"ApiKey\":\"YOURAPIKEY\"}}'
      ```
 
 3. After you have your resource configured, [create your AWS stack][11] that includes the activated CockroachLabs resource.
